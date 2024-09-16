@@ -11,19 +11,12 @@
 
 El sistema controlará el suministro y la producción de agua ultrapura a través de un sistema de tratamiento mediante ósmosis inversa.
 
-El usuario podrá:
-- Encender y apagar el sistema.
-- Controlar las presiones de corte mínimas y máximas para el encendido de las bombas de abastecimiento principal.
-- Ajustar la frecuencia de funcionamiento de la bomba que proporciona presión a las membranas de filtración.
+Entrega TP1
+- Encender y apagar el sistema, en este caso ya se habia implementado maquina de estado para ese control por que se evidenció problema de rebote y era muy dificil poder prender o apagar el sistema. el Led1 es el indicador de este servicio.
+- Controlar las presiones de corte mínimas y máximas para el encendido de las bombas de abastecimiento principal, este item se esta emulando con un potenciometro y se realiza una conversión sencilla que me permite obtener la presión de entrada en PSI y prender o apagar la bomba P1 según la presiones altas y bajas configuradas para apagar el sistema, el monitoreo se realiza cada 1.5 segundos, evitando ser bloqueante.
+- Ajustar la frecuencia de funcionamiento de la bomba que proporciona presión a las membranas de filtración. Se ha implementado una maquina de estado para el manejo de un teclado 4x3, todavia no se ha implementado.
+- Envio por UART, de momento se esta enviando cada 3 segundos el estado del sistema y la presión actual del sistema.
 
-Cuando el sistema está encendido, las bombas P1 y P2 funcionarán en condiciones normales.
-- La bomba P1 está controlada por presiones mínima y máxima de funcionamiento.
-- La bomba P2 está controlada por una presión mínima para evitar que funcione en vacío.
-
-La bomba P2 impulsa agua a presión a través de membranas para purificarla, y el agua tratada se almacena en un tanque con tres interruptores de nivel:
-- **Level high:** Cuando se activa, indica que el tanque está lleno y apaga todas las bombas hasta que el nivel disminuya.
-- **Level medium:** Permite iniciar la producción de agua desde este nivel.
-- **Level low:** También permite iniciar la producción de agua desde este nivel.
 
 **Plataforma de desarrollo:** NUCLEO-144
 
@@ -32,7 +25,5 @@ La bomba P2 impulsa agua a presión a través de membranas para purificarla, y e
 - **LED 1:** Indica el estado de funcionamiento del sistema.
 - **ANALOG IN 1:** Emula un sensor de presión.
 - **UART:** Se utiliza para enviar información sobre el estado del sistema a una PC.
-- **DIGITAL IN:** Emula el interruptor de nivel alto ("level high").
-- **DIGITAL IN:** Emula el interruptor de nivel medio ("level medium").
-- **DIGITAL IN:** Emula el interruptor de nivel bajo ("level low").
+
 
