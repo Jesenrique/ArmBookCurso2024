@@ -3,12 +3,12 @@
 
 //=====[Defines]===============================================================
 #define TIME_INCREMENT_MS          10
-#define TIME_BLINK_LED_SISTEM      1000
+#define TIME_BLINK_LED_SYSTEM     1000
 #define TIME_CHECK_PRESSURE        1500
 #define TIME_SEND_DATA             3000
 #define DEBOUNCE_BUTTON_TIME_MS    40
-#define KEYPAD_NUMBER_OF_ROWS                    4
-#define KEYPAD_NUMBER_OF_COLS                    3
+#define KEYPAD_NUMBER_OF_ROWS      4
+#define KEYPAD_NUMBER_OF_COLS      3
 
 //=====[Declaration and initialization of public global objects]===============
 DigitalIn onOffButton(BUTTON1);
@@ -18,7 +18,7 @@ DigitalIn levelHighSensor(D2);
 DigitalIn levelMediumSensor(D3);
 DigitalIn levelLowSensor(D4);
 
-DigitalOut ledSistem(LED1);
+DigitalOut ledSystem(LED1);
 DigitalOut pumpP1(LED2);
 DigitalOut pumpP2(LED3);
 DigitalOut buzzer(D7);
@@ -47,7 +47,7 @@ typedef enum {
 bool onOffStatus = false;
 bool onOffStatusLed = false;
 bool evento_boton = false;
-int blinkLedSistem = 0;
+int blinkLedSystem = 0;
 
 int timeCheckPressure=0;
 int counterEventsBtnOff = 0;
@@ -55,6 +55,9 @@ int accumulatedDebounceButtonTime     = 0;
 int numberOfEnterButtonReleasedEvents = 0;
 int timeAccumulatedSendData=0;
 int timeAccumulatedCheckPressure=0;
+
+int pressureCutIn_P1 = 5;
+int pressureCutOff_P1 = 80;
 
 
 onOffButtonState_t enterButtonState;
@@ -81,7 +84,7 @@ matrixKeypadState_t matrixKeypadState;
 void inputsInit();
 void outputsInit();
 
-void statusSistem();
+void statusSystem();
 void statusLed();
 void debounceButtonInit();
 bool debounceButtonUpdate();
@@ -103,7 +106,7 @@ int main()
     inputsInit();
     outputsInit();
     while (true) {
-        statusSistem();
+        statusSystem();
         statusLed();
         checkpressure();
         sendData();
@@ -127,13 +130,13 @@ void inputsInit()
 
 void outputsInit()
 {
-    ledSistem = 0;
+    ledSystem = 0;
     pumpP1 = false;
     pumpP2 = 0;
     buzzer =0;
 }
 
-void statusSistem()
+void statusSystem()
 {   
     evento_boton=debounceButtonUpdate();
     if (evento_boton){
@@ -146,16 +149,16 @@ void statusLed()
 {   
     if (onOffStatus)
     {
-        if(blinkLedSistem <= TIME_BLINK_LED_SISTEM){
-            blinkLedSistem = blinkLedSistem+TIME_INCREMENT_MS;
+        if(blinkLedSystem <= TIME_BLINK_LED_SYSTEM){
+            blinkLedSystem = blinkLedSystem+TIME_INCREMENT_MS;
         }
         else{
-            blinkLedSistem=0;
-            ledSistem=!ledSistem;
+            blinkLedSystem=0;
+            ledSystem=!ledSystem;
         }
     }
     else{
-        ledSistem=0;
+        ledSystem=0;
     }
 }
 
@@ -168,7 +171,7 @@ void sendData()
     else{
         int length = snprintf(buffer, sizeof(buffer), "La presión de entrada es: %.2f psi, ", readPressureM1());
         uartUsb.write(buffer, length);
-        int length1 = snprintf(buffer, sizeof(buffer), "el sistema esta: %s, \n\r", pumpP1 ? "encendido" : "apagado");
+        int length1 = snprintf(buffer, sizeof(buffer), "el Systema esta: %s, \n\r", pumpP1 ? "encendido" : "apagado");
         uartUsb.write(buffer, length1);
         timeAccumulatedSendData=0;
     }
@@ -332,9 +335,9 @@ void checkpressure() {
     else{
         int valuePressureM1 = readPressureM1();
 
-        if (valuePressureM1 <= 5) {
+        if (valuePressureM1 <= pressureCutIn_P1) {
             pumpP1 = false;
-        } else if (valuePressureM1 >= 6 && valuePressureM1 <= 75) {
+        } else if (valuePressureM1 > pressureCutIn_P1 && valuePressureM1 <= pressureCutOff_P1) {
             pumpP1 = true;
         } else {
             pumpP1 = false;
