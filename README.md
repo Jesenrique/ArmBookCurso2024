@@ -1,38 +1,89 @@
+---
+
 # ArmBookCurso2024
 
+## **Título:** Control de Sistema de Tratamiento de Agua
 
-**Título:** Control de Sistema de Tratamiento de Agua
+### **Alumno:** Jesús García
 
-**Alumno:** Jesús García
+### **Objetivo:**  
+Desarrollar un sistema de monitoreo y control para un proceso de tratamiento de agua.
 
-**Objetivo:** Desarrollar un sistema que monitorice y controle un proceso de tratamiento de agua.
+### **Descripción:**
 
-**Descripción:**
+Este sistema controla el suministro y la producción de agua ultrapura mediante un tratamiento por ósmosis inversa. Utiliza diferentes módulos y periféricos para monitorear la presión y gestionar las bombas, optimizando el proceso de tratamiento de agua y garantizando su seguridad y eficiencia.
 
-El sistema controlará el suministro y la producción de agua ultrapura a través de un sistema de tratamiento mediante ósmosis inversa.
+### **Componentes del sistema:**
 
-El usuario podrá:
-- Encender y apagar el sistema.
-- Controlar las presiones de corte mínimas y máximas para el encendido de las bombas de abastecimiento principal.
-- Ajustar la frecuencia de funcionamiento de la bomba que proporciona presión a las membranas de filtración.
+1. **Módulo `control_system`:**  
+   Inicializa el panel de control y actualiza el sistema constantemente.
 
-Cuando el sistema está encendido, las bombas P1 y P2 funcionarán en condiciones normales.
-- La bomba P1 está controlada por presiones mínima y máxima de funcionamiento.
-- La bomba P2 está controlada por una presión mínima para evitar que funcione en vacío.
+2. **Módulo `panel_control`:**  
+   Interactúa con los siguientes módulos:
+   - `buttons`: Gestiona la interacción con el usuario mediante botones.
+   - `display`: Muestra la información del sistema en la pantalla.
+   - `matrix_keypad`: Permite la entrada de datos mediante un teclado 4x3.
+   - `pressure_sensor`: Monitorea la presión de entrada y salida del sistema.
+   - `pumps`: Controla el funcionamiento de las bombas.
+   - `serial_communication`: Comunica información sobre el sistema mediante UART.
 
-La bomba P2 impulsa agua a presión a través de membranas para purificarla, y el agua tratada se almacena en un tanque con tres interruptores de nivel:
-- **Level high:** Cuando se activa, indica que el tanque está lleno y apaga todas las bombas hasta que el nivel disminuya.
-- **Level medium:** Permite iniciar la producción de agua desde este nivel.
-- **Level low:** También permite iniciar la producción de agua desde este nivel.
+### **Funcionamiento:**
 
-**Plataforma de desarrollo:** NUCLEO-144
+El sistema monitorea dos presiones clave:
+- **P1:** Presión de entrada (antes de los filtros).
+- **P2:** Presión de salida (después de los filtros).
 
-**Periféricos a utilizar:**
-- **USER BUTTON:** Para iniciar o apagar el sistema.
-- **LED 1:** Indica el estado de funcionamiento del sistema.
-- **ANALOG IN 1:** Emula un sensor de presión.
-- **UART:** Se utiliza para enviar información sobre el estado del sistema a una PC.
-- **DIGITAL IN:** Emula el interruptor de nivel alto ("level high").
-- **DIGITAL IN:** Emula el interruptor de nivel medio ("level medium").
-- **DIGITAL IN:** Emula el interruptor de nivel bajo ("level low").
+En función de estas presiones, el sistema controla el encendido y apagado de las bombas para evitar condiciones peligrosas como la falta de agua o sobrepresión.
 
+### **Interacción con el usuario:**
+
+El usuario puede interactuar con el sistema mediante un botón que, al ser presionado de manera extendida, despliega un menú serial con las siguientes opciones:
+
+1. **Ajustar Frecuencia de la Bomba:**  
+   Permite ingresar la frecuencia de operación de las bombas mediante el teclado de 4x3.
+
+2. **Verificar Estado del Sistema:**  
+   Imprime las variables de estado del sistema en la pantalla.
+
+3. **Detener Sistema:**  
+   Detiene el funcionamiento de las bombas de manera segura.
+
+### **Operación del sistema:**
+
+- **Bombas P1 y P2:**  
+  Funcionan dentro de los rangos de presión mínima y máxima.  
+  La bomba P1 está controlada por la presión de entrada, mientras que P2 se controla por la presión de salida.
+
+- **Pantalla LCD:**  
+  Muestra el estado de cada variable del sistema, actualizándose periódicamente.
+
+### **Plataforma de desarrollo:**
+- **STM32 Nucleo-144**
+
+### **Periféricos utilizados:**
+
+- **USER BUTTON:**  
+  Inicia o apaga el sistema.
+  
+- **LED 1:**  
+  Indica un cambio de estado para iniciar el modo menú.
+
+- **LED 2:**  
+  Indica el estado de la bomba P1.
+
+- **LED 3:**  
+  Indica el estado de la bomba P2.
+
+- **ANALOG IN 1:**  
+  Simula un sensor de presión.
+
+- **UART:**  
+  Comunica información sobre el estado del sistema a un PC.
+
+- **TECLADO:**  
+  Permite navegar en el menú serial e ingresar la frecuencia de las bombas.
+
+- **LCD:**  
+  Visualiza los estados de las variables periódicamente.
+
+---
