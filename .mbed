@@ -1,0 +1,5 @@
+ROOT=.
+DEVICE_ID[/home/studio/workspace/armbookcurso2024]=066BFF323239524257250733
+DEVICE_TYPE[/home/studio/workspace/armbookcurso2024]=connected
+TARGET=NUCLEO_F767ZI
+TARGET_CODE=0818
